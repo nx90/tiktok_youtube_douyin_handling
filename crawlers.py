@@ -56,13 +56,15 @@ class Crawlers(object):
         print('chrome 正在启动', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         opt = uc.ChromeOptions()
         opt.add_argument('--no-first-run')
-        opt.add_argument('--no-service-autorun')
-        opt.add_argument('--password-store=basic')
+        # opt.add_argument('--no-service-autorun')
+        # opt.add_argument('--password-store=basic')
         opt.add_argument('--lang=en-US')
         opt.add_argument('--mute-audio')
         opt.add_argument('--disable-gpu')
         opt.add_argument('--headless')
-        _browser = uc.Chrome(options=opt, version_main=int(path_config['chrome_version']))
+        opt.add_argument('--user-data-dir=C:\\Users\\YingchaoLv\\AppData\\Local\\Google\\Chrome for Testing\\User Data')
+        _browser = uc.Chrome(options=opt, driver_executable_path=r"D:\\Tools\\ChromeWebDriver\\v119\\chromedriver-win64\\chromedriver.exe",
+                             browser_executable_path=r"D:\\Tools\\ChromeWebDriver\\v119\\chrome-win64\\chrome-win64\\chrome.exe", version_main=int(path_config['chrome_version']))
         print('chrome 启动成功', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         _browser.implicitly_wait(10)
         _browser.get('https://www.tiktok.com/foryou?is_copy_url=1&is_from_webapp=v1')
@@ -236,21 +238,25 @@ class Crawlers(object):
         self.tiktok_results.append({'request_id': request.requestID, 'results': result})
 
     def tiktok_search_video(self, search_keywords, offset=0):
-        cookiestr = "tt_csrf_token=poZiJA2w-g7ubYxO-IPYptHs43-fevP82K6c; tt_chain_token=LV3vyP9xkzu1olcUYxoMPA==; csrf_session_id=3c385bce12441f6a9adcb2b02b5e5dae; passport_csrf_token=13925ec1d3411be9048f73be0f660a95; passport_csrf_token_default=13925ec1d3411be9048f73be0f660a95; s_v_web_id=verify_lojksyop_PltyvHfO_6w5N_4DwS_AewM_sS6alf5MtDVD; multi_sids=7169356242610357254%3Af0585c4b10a9490c77eb0c414da470d4; cmpl_token=AgQQAPO8F-RO0rNARSMFN90__yRRexJef4A3YNODxQ; passport_auth_status=8dba23d8f1a6f74eb79aafed4c6e10fa%2C; passport_auth_status_ss=8dba23d8f1a6f74eb79aafed4c6e10fa%2C; sid_guard=f0585c4b10a9490c77eb0c414da470d4%7C1699110824%7C15552000%7CThu%2C+02-May-2024+15%3A13%3A44+GMT; uid_tt=afcd0f90ff8631face19e3f8a187453648b65e7c99ecafec77e51b179432c6a4; uid_tt_ss=afcd0f90ff8631face19e3f8a187453648b65e7c99ecafec77e51b179432c6a4; sid_tt=f0585c4b10a9490c77eb0c414da470d4; sessionid=f0585c4b10a9490c77eb0c414da470d4; sessionid_ss=f0585c4b10a9490c77eb0c414da470d4; sid_ucp_v1=1.0.0-KGMyNGM5ZmQ1NjE5MjE5MTM1MDI4MDVkZmMzNGQyNDA2YzQyOGFiY2MKHwiGiJToyPCqv2MQqL-ZqgYYswsgDDCDlvubBjgIQBIQAxoGbWFsaXZhIiBmMDU4NWM0YjEwYTk0OTBjNzdlYjBjNDE0ZGE0NzBkNA; ssid_ucp_v1=1.0.0-KGMyNGM5ZmQ1NjE5MjE5MTM1MDI4MDVkZmMzNGQyNDA2YzQyOGFiY2MKHwiGiJToyPCqv2MQqL-ZqgYYswsgDDCDlvubBjgIQBIQAxoGbWFsaXZhIiBmMDU4NWM0YjEwYTk0OTBjNzdlYjBjNDE0ZGE0NzBkNA; store-idc=alisg; store-country-code=sg; store-country-code-src=uid; tt-target-idc=alisg; tt-target-idc-sign=aL8uKtxviSyE5Urayg680oYvSQPlHCptrUNu0A50vNQtWjxDn4k0qL-IzEX_F4uVsDIH11h4Ld7xteVoPEN7X7j5TpZp2AeEw_xdP6-J6kGm74x_TW9Ij_I3lY3AFJZ0MXNRy_cIwqzy_AB1AfqtHlGTJ5cBi2x7vLVYGH-cRklp2purLxVRb7ofeJHQpvLhORGDpzCBdxuMjKpCDB992PzCMUCmyyibEyxIFy_TUZXquRhmcIkfRoVAbq5TwsdA6W2QpAyaN8ZS1MOkSpBqXMO8U6nF89XZnB49yiC_4YEC7x09_LUw_Uj9-idt6McglSyxzzEMNzShHjALyWNhEh-Y0sAsghC-R1yvn6Wl0-99AjqtiGl47AaKBeshO0J2hC_ojih5sqQUKgjSA2VZDatSRSHkNp535QMMUwVj_WTX7uSxwZpVPYkcxdz82kiC5Y0ayiA0YBDh8l0wpwNzo9jei5k53k5ojd3RsRkT6oYD2eFoUiDmcDH_CKf_-YVN; ttwid=1%7CPslqeUeyVJmPPQ_m2XdO-inB7WkSqW2h4e4P_ZxGZeE%7C1700471632%7C1f004ba9a4192e255a3ae80910ca98fc48f925429cd67d5b589b4eacbb8caa6a; msToken=nUPQqImtDM_NQKZgj14YiSn9x7sxb4MXPRmXJMP_0TK0jJvblzEEiTafq9tZclma4bfTjqX13vgK-TtsF1v1yP-Gm9kOpenFhlDPiC-1kyhH85JV8iPiKKIpPkUyn2D820hIe0LXf_mstVI=; odin_tt=7fa11e3dd2ce551f6d7a6aad704d6109f70424f6a6bf1c944e4d98b28535f26140e2f6f9eb8e4b5a1e719f71f52036e62ce8ddf8f49376ef581420643b8b0cb3595e9d0213e4ac88f9c1aa7a8569eb5e"
+        jsonString = ""
+        with open('tiktok_cookies.json', 'r') as f:
+                    jsonString = f.read()
+        cookies = json.loads(jsonString)
+        #cookiestr = "passport_csrf_token=d357efb501e4514129e1f6a1e153c6c6; passport_csrf_token_default=d357efb501e4514129e1f6a1e153c6c6; s_v_web_id=verify_lt4zd3hl_bB6Pim5h_Q8Z6_4ytP_8F83_trELhflf1YrE; last_login_method=google; tiktok_webapp_theme=dark; perf_feed_cache={%22expireTimestamp%22:1709247600000%2C%22itemIds%22:[%227309056569549917446%22%2C%227309174385859136814%22%2C%227332270079633001771%22]}; passport_fe_beating_status=true; msToken=tfnSl2zqDcbwfPIkjIf6pwbPI-qgcxN1tODMoeNEhzf5_PSwDC1tIr2tAbZA4i0ShhCxurvUaoCWqjNdQ3J35x6Ut4Yqwe3GMQ0WHaEHRnXjc0Jmw0OYoWKDUr9rksGljXAUClsozVgl40ac; msToken=-C5nHtj6boHCdPetXG4facBmEv5G-bwQ-ftMe8k78998obdJ8hrKUCp5PYhZaJ2wkKED0aBQSCSyhERtDB8vMuNhLYrINczG2hYtE9ZWG1GyA9DIQvDMd7yDdAWubPZRpsJdPRYboUNcPEIFWA=="
         keywords = search_keywords
         search_keywords = quote(search_keywords, safe='')
         print('search_keywords: ', search_keywords)
-        url = f'https://www.tiktok.com/api/search/general/full/?aid=1988&app_language=zh-Hans&app_name=tiktok_web&browser_language=zh-CN&browser_name=Mozilla&browser_online=true&browser_platform=MacIntel&browser_version=5.0%20%28Macintosh%3B%20Intel%20Mac%20OS%20X%2010_15_7%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F118.0.0.0%20Safari%2F537.36&channel=tiktok_web&cookie_enabled=true&device_id=7291677034442016263&device_platform=web_pc&device_type=web_h264&focus_state=false&from_page=search&history_len=2&is_fullscreen=false&is_page_visible=true&keyword={search_keywords}&offset={offset}&os=mac&priority_region=&referer=&region=SG&screen_height=900&screen_width=1440&search_id=20231019143145139F4D25AFEB59234776&tz_name=Asia%2FShanghai&web_search_code=%7B%22tiktok%22%3A%7B%22client_params_x%22%3A%7B%22search_engine%22%3A%7B%22ies_mt_user_live_video_card_use_libra%22%3A1%2C%22mt_search_general_user_live_card%22%3A1%7D%7D%2C%22search_server%22%3A%7B%7D%7D%7D&webcast_language=zh-Hans'
+        url = f'https://www.tiktok.com/api/search/general/full/?WebIdLastTime=1709075623&aid=1988&app_language=zh-Hant-TW&app_name=tiktok_web&browser_language=zh-TW&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F121.0.0.0%20Safari%2F537.36&channel=tiktok_web&cookie_enabled=true&device_id=7340422179836282369&device_platform=web_pc&device_type=web_h264&focus_state=true&from_page=search&history_len=2&is_fullscreen=false&is_page_visible=true&keyword={search_keywords}&offset={offset}&os=windows&priority_region=&referer=https%3A%2F%2Fwww.tiktok.com%2Fforyou%3Flang%3Dzh-Hant-TW&region=US&root_referer=https%3A%2F%2Fwww.tiktok.com%2Fforyou%3Flang%3Dzh-Hant-TW&screen_height=1235&screen_width=2195&search_source=normal_search&tz_name=Asia%2FShanghai&verifyFp=verify_lt4zd3hl_bB6Pim5h_Q8Z6_4ytP_8F83_trELhflf1YrE&web_search_code=%7B%22tiktok%22%3A%7B%22client_params_x%22%3A%7B%22search_engine%22%3A%7B%22ies_mt_user_live_video_card_use_libra%22%3A1%2C%22mt_search_general_user_live_card%22%3A1%7D%7D%2C%22search_server%22%3A%7B%7D%7D%7D&webcast_language=zh-Hant-TW&msToken=hJVXU8jm89eZY_AiD4JjedfY3x7CM_HY6stEOWzkJ6efZ0JHx0frxFbcOpWXOZs_jlHnBZSntzaMKgDqM8ESJgqSWudtWTJceeq1NRnpI9BSlQlHJ4RbE4wmxxYxok4rEwUGU9SwDa6yInvJ-Q==&X-Bogus=DFSzswVE/VkANGGGtoF1Ut9WcBJr&_signature=_02B4Z6wo00001PbXCaAAAIDA9tcJoknJ0Vj21w0AAFhw32'
         headers = {
             'authority': 'www.tiktok.com',
-            'referer': 'https://www.tiktok.com/search?q=beautiful%20woman&t=1670318209758',
+            'referer': f'https://www.tiktok.com/search?q={search_keywords}&t=1709118231379',
             'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
-            'cookie': cookiestr
+            #'cookie': cookiestr
         }
-        res = self.simple_get(url=url, headers=headers)
+        res = self.simple_get(url=url, headers=headers, cookies=cookies)
         if res is None or res == '':
             print(f'直接请求失败, 开始curl请求...')
-            curl_code = f"curl 'https://www.tiktok.com/api/search/general/full/?aid=1988&app_language=zh-Hans&app_name=tiktok_web&browser_language=zh-CN&browser_name=Mozilla&browser_online=true&browser_platform=MacIntel&browser_version=5.0%20%28Macintosh%3B%20Intel%20Mac%20OS%20X%2010_15_7%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F118.0.0.0%20Safari%2F537.36&channel=tiktok_web&cookie_enabled=true&device_id=7291677034442016263&device_platform=web_pc&device_type=web_h264&focus_state=false&from_page=search&history_len=2&is_fullscreen=false&is_page_visible=true&keyword={search_keywords}&offset={offset}&os=mac&priority_region=&referer=&region=SG&screen_height=900&screen_width=1440&search_id=20231019143145139F4D25AFEB59234776&tz_name=Asia%2FShanghai&web_search_code=%7B%22tiktok%22%3A%7B%22client_params_x%22%3A%7B%22search_engine%22%3A%7B%22ies_mt_user_live_video_card_use_libra%22%3A1%2C%22mt_search_general_user_live_card%22%3A1%7D%7D%2C%22search_server%22%3A%7B%7D%7D%7D&webcast_language=zh-Hans' \
+            curl_code = f"curl 'https://www.tiktok.com/api/search/general/full/?WebIdLastTime=1709075623&aid=1988&app_language=zh-Hant-TW&app_name=tiktok_web&browser_language=zh-TW&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F121.0.0.0%20Safari%2F537.36&channel=tiktok_web&cookie_enabled=true&device_id=7340422179836282369&device_platform=web_pc&device_type=web_h264&focus_state=true&from_page=search&history_len=2&is_fullscreen=false&is_page_visible=true&keyword={search_keywords}&offset={offset}&os=windows&priority_region=&referer=https%3A%2F%2Fwww.tiktok.com%2Fforyou%3Flang%3Dzh-Hant-TW&region=US&root_referer=https%3A%2F%2Fwww.tiktok.com%2Fforyou%3Flang%3Dzh-Hant-TW&screen_height=1235&screen_width=2195&search_source=normal_search&tz_name=Asia%2FShanghai&verifyFp=verify_lt4zd3hl_bB6Pim5h_Q8Z6_4ytP_8F83_trELhflf1YrE&web_search_code=%7B%22tiktok%22%3A%7B%22client_params_x%22%3A%7B%22search_engine%22%3A%7B%22ies_mt_user_live_video_card_use_libra%22%3A1%2C%22mt_search_general_user_live_card%22%3A1%7D%7D%2C%22search_server%22%3A%7B%7D%7D%7D&webcast_language=zh-Hant-TW&msToken=hJVXU8jm89eZY_AiD4JjedfY3x7CM_HY6stEOWzkJ6efZ0JHx0frxFbcOpWXOZs_jlHnBZSntzaMKgDqM8ESJgqSWudtWTJceeq1NRnpI9BSlQlHJ4RbE4wmxxYxok4rEwUGU9SwDa6yInvJ-Q==&X-Bogus=DFSzswVE/VkANGGGtoF1Ut9WcBJr&_signature=_02B4Z6wo00001PbXCaAAAIDA9tcJoknJ0Vj21w0AAFhw32' \
                     -H 'cookie: {cookiestr}' \
                     -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \
                     --compressed"
@@ -258,7 +264,7 @@ class Crawlers(object):
             try:
                 json.loads(res_curl)
                 res = res_curl
-            except:
+            except Exception as e:
                 res = None
         has_more = 0
         if res is not None:
@@ -585,7 +591,7 @@ class Crawlers(object):
 
 if __name__ == '__main__':
     crawler = Crawlers()
-    # crawler.update_tiktok_cookies()
+    crawler.update_tiktok_cookies()
     # for i in range(10):
     # crawler.youtube_search_video('funny video')
     #     time.sleep(1)
@@ -600,4 +606,4 @@ if __name__ == '__main__':
     # crawler.youtube_crawler('funny')
 
     # crawler.douyin_search_video('小姐姐短视频')
-    crawler.douyin_crawler('小姐姐短视频')
+    # crawler.douyin_crawler('小姐姐短视频')

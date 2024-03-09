@@ -5,6 +5,7 @@ import os
 import traceback
 
 import requests
+from pytube import YouTube
 from flask import Flask, render_template, request, url_for, redirect
 from pymongo import MongoClient
 import sys
@@ -168,17 +169,25 @@ def download_video():
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'}
         for i in range(3):
             try:
-                if 'tiktok' in video_url or 'youtube' in video_url or 'google' in video_url:
-                    resp = requests.get(url=video_url, headers=headers)
+                if 'youtube' in video_url or 'google' in video_url:
+                    try:
+                        yt = YouTube(f"https://www.youtube.com/watch?v={video_id}")
+                        streams = yt.streams.filter(progressive=True, file_extension="mp4")
+                        highest_resolution_stream = streams.get_highest_resolution()
+                        highest_resolution_stream.download(output_path="static/videos", filename=f"{video_id}.mp4")
+                        print("Video downloaded successfully!")
+                        break
+                    except Exception as e:
+                        print(f'下载: {video_id} 失败: {traceback.format_exc()}')
                 else:
                     resp = requests.get(url=video_url, headers=headers)
-                if resp.status_code < 300:
-                    with open(file_path, 'wb')as f:
-                        f.write(resp.content)
-                    print(f'下载: {video_id} 成功! ')
-                    return video_name
-                else:
-                    continue
+                    if resp.status_code < 300:
+                        with open(file_path, 'wb')as f:
+                            f.write(resp.content)
+                        print(f'下载: {video_id} 成功! ')
+                        return video_name
+                    else:
+                        continue
             except:
                 print(f'下载: {video_id} 失败: {traceback.format_exc()}')
         return '下载失败!'
